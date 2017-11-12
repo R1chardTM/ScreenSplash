@@ -21,6 +21,8 @@ namespace ScreenSplash
             _imageTimer.Tick += ImageTimer_Tick;
             _imageTimer.Interval = new TimeSpan(0,0,10);
             _imageTimer.Start();
+
+            Cursor = Cursors.None;
         }
 
         private void SetImage()
