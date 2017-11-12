@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using WpfScreenHelper;
 
 namespace ScreenSplash
 {
-    /// <summary>
-    /// Interaction logic for ScreenSaver.xaml
-    /// </summary>
     public partial class ScreenSaver : Window
     {
-        DispatcherTimer _imageTimer = new DispatcherTimer();
+        private DispatcherTimer _imageTimer = new DispatcherTimer();
+        private Point? _lastMove;
 
         public ScreenSaver()
         {
@@ -34,6 +33,34 @@ namespace ScreenSplash
         private void ImageTimer_Tick(object sender, EventArgs e)
         {
             SetImage();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            Application.Current.Shutdown();
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+            Application.Current.Shutdown();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            Point currentMove = e.GetPosition(null);
+
+            //Ignore mouse move event triggered at application start
+            if (_lastMove == null)
+            {
+                _lastMove = currentMove;
+            }
+            else if (_lastMove != currentMove)
+            {
+                Application.Current.Shutdown();
+            }
         }
     }
 }
