@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -28,8 +30,22 @@ namespace ScreenSplash
         private void SetImage()
         {
             var screen = Screen.PrimaryScreen;
-            var uri = new Uri("https://source.unsplash.com/" + screen.Bounds.Width + "x" + screen.Bounds.Height + "?sig=" + DateTime.Now.Ticks);
-            img.Source = new BitmapImage(uri);
+            var uri = new Uri("https://source.unsplash.com/" + screen.Bounds.Width + "x" + screen.Bounds.Height + "?sig=" + DateTime.Now.Ticks, UriKind.Absolute);
+
+            var webClient = new WebClient();
+            var imageBytes = webClient.DownloadData(uri);
+
+            var newImage = new BitmapImage();
+            using (var stream = new MemoryStream(imageBytes))
+            {
+                newImage.BeginInit();
+                newImage.CacheOption = BitmapCacheOption.OnLoad;
+                newImage.StreamSource = stream;
+                newImage.EndInit();
+            }
+            newImage.Freeze();
+
+            img.Source = newImage;
         }
 
         private void ImageTimer_Tick(object sender, EventArgs e)
