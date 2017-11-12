@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ScreenSplash
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private void ApplicationStartup(object sender, StartupEventArgs e)
+        {
+            //Argument '/s' or no arguments starts screen saver
+            if (e.Args.Length == 0 || e.Args[0].ToLower().StartsWith("/s"))
+            {
+                var screenSaver = new ScreenSaver();
+                screenSaver.Show();
+            }
+        }
     }
 }
