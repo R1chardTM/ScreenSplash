@@ -6,9 +6,23 @@
         mc:Ignorable="d"
         Title="ScreenSaver"
         WindowState="Maximized" WindowStyle="None">
+    <Window.Resources>
+        <Storyboard x:Key="FadeIn">
+            <DoubleAnimation
+                Storyboard.TargetName="img" 
+                Storyboard.TargetProperty="Opacity"
+                From="0.0" To="1.0" Duration="0:0:.3" />
+            </Storyboard>
+            <Storyboard x:Key="FadeOut">
+                <DoubleAnimation
+                    Storyboard.TargetName="img" 
+                    Storyboard.TargetProperty="Opacity"
+                    From="1.0" To="0.0" Duration="0:0:.3" />
+            </Storyboard>
+    </Window.Resources>
     <Grid>
         <Border Name='Content' Grid.Column='1' Grid.Row='1' Background='Black'>
-            <Image Name='img' Stretch='UniformToFill' />
+            <Image Name='img' Stretch='UniformToFill'/>
         </Border>
     </Grid>
 </Window>
