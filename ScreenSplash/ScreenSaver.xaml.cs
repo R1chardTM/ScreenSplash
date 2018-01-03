@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Windows;
@@ -15,10 +16,16 @@ namespace ScreenSplash
         private DispatcherTimer _imageTimer = new DispatcherTimer();
         private Point? _lastMove;
         private BitmapImage _newImage;
+        private List<Photo> _photos;
+        private int _currentPhotosIndex = 0;
 
         public ScreenSaver()
         {
             InitializeComponent();
+
+            var screen = Screen.PrimaryScreen;
+            var api = new UnsplashApi(screen.Bounds.Width, screen.Bounds.Height);
+            _photos = api.RandomPhotos();
 
             //Set first image
             PreLoadImage();
@@ -36,11 +43,11 @@ namespace ScreenSplash
         private void PreLoadImage()
         {
             //Preload new image
-            var screen = Screen.PrimaryScreen;
-            var uri = new Uri("https://source.unsplash.com/" + screen.Bounds.Width + "x" + screen.Bounds.Height + "?sig=" + DateTime.Now.Ticks, UriKind.Absolute);
+            var url = _photos[_currentPhotosIndex].Urls.Custom;
+            _currentPhotosIndex = _photos.Count == _currentPhotosIndex + 1 ? 0 : _currentPhotosIndex + 1;
 
             var webClient = new WebClient();
-            var imageBytes = webClient.DownloadData(uri);
+            var imageBytes = webClient.DownloadData(url);
 
             var newImage = new BitmapImage();
             using (var stream = new MemoryStream(imageBytes))
